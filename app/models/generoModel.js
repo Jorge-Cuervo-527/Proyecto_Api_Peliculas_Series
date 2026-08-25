@@ -11,7 +11,7 @@ const generoSchema = mongoose.Schema ({
     type: String,
     required: true,
     enum: ['Activo', 'Inactivo'],
-    default: 'Activo'
+    //default: 'Activo'
    },
 
    descripcion: {

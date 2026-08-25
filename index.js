@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
-var port = process.env.PORT || 3001;
+var port = process.env.PORT;
 
 // Conexión a la base de datos
 getConnection();
@@ -18,7 +18,7 @@ getConnection();
 app.use('/genero', require('./routes/generoRoute'));
 app.use('/director', require('./routes/directorRoute'));
 app.use('/productora', require('./routes/productoraRoute'));
-app.use('/tipo', require('./routes/tipoRoute')), 
+app.use('/tipo', require('./routes/tipoRoute')); 
 app.use('/media', require('./routes/mediaRoute'));
 
 

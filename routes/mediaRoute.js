@@ -1,6 +1,12 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { getMedias, getMediaById, createMedia, updateMedia } = require('../controllers/mediaController');
+const { 
+    getMedias, 
+    getMediaById, 
+    createMedia, 
+    updateMedia, 
+    deleteMedia 
+} = require('../controllers/mediaController');
 
 const router = Router();
 
@@ -35,5 +41,8 @@ router.put('/:id', [
     check('productora', 'La productora es requerida y debe ser un ID válido').isMongoId(),
     check('tipo', 'El tipo es requerido y debe ser un ID válido').isMongoId()
 ], updateMedia);
+
+// DELETE
+router.delete('/:id', deleteMedia);
 
 module.exports = router;

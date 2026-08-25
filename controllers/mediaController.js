@@ -1,7 +1,9 @@
 const Media = require('../app/models/mediaModel');
+const Genero = require('../app/models/generoModel');
+const Director = require('../app/models/directorModel');
+const Productora = require('../app/models/productoraModel');
 const { validationResult } = require('express-validator');
 
-// Listar todas las medias (GET) con populate para ver los detalles relacionados
 const getMedias = async (req, res) => {
     try {
         const medias = await Media.find()
@@ -16,7 +18,6 @@ const getMedias = async (req, res) => {
     }
 };
 
-// Obtener media por ID (GET por ID)
 const getMediaById = async (req, res) => {
     try {
         const media = await Media.findById(req.params.id)
@@ -35,13 +36,29 @@ const getMediaById = async (req, res) => {
     }
 };
 
-// Crear una media (POST)
 const createMedia = async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ messages: errors.array() });
         }
+
+        // --- VALIDACIONES DE ESTADO (Requisito del Caso de Estudio) ---
+        const generoBD = await Genero.findById(req.body.genero);
+        if (!generoBD || generoBD.estado !== 'Activo') {
+            return res.status(400).send('El género seleccionado no existe o está Inactivo');
+        }
+
+        const directorBD = await Director.findById(req.body.director);
+        if (!directorBD || directorBD.estado !== 'Activo') {
+            return res.status(400).send('El director seleccionado no existe o está Inactivo');
+        }
+
+        const productoraBD = await Productora.findById(req.body.productora);
+        if (!productoraBD || productoraBD.estado !== 'Activo') {
+            return res.status(400).send('La productora seleccionada no existe o está Inactiva');
+        }
+        // -------------------------------------------------------------
 
         let media = new Media({
             serial: req.body.serial,
@@ -67,7 +84,6 @@ const createMedia = async (req, res) => {
     }
 };
 
-// Actualizar una media (PUT)
 const updateMedia = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -79,6 +95,23 @@ const updateMedia = async (req, res) => {
         if (!media) {
             return res.status(404).send('La media no existe');
         }
+
+        // --- VALIDACIONES DE ESTADO (Para no permitir actualizar con inactivos) ---
+        const generoBD = await Genero.findById(req.body.genero);
+        if (!generoBD || generoBD.estado !== 'Activo') {
+            return res.status(400).send('El género seleccionado no existe o está Inactivo');
+        }
+
+        const directorBD = await Director.findById(req.body.director);
+        if (!directorBD || directorBD.estado !== 'Activo') {
+            return res.status(400).send('El director seleccionado no existe o está Inactivo');
+        }
+
+        const productoraBD = await Productora.findById(req.body.productora);
+        if (!productoraBD || productoraBD.estado !== 'Activo') {
+            return res.status(400).send('La productora seleccionada no existe o está Inactiva');
+        }
+        // -------------------------------------------------------------
 
         media.serial = req.body.serial;
         media.titulo = req.body.titulo;
@@ -99,9 +132,23 @@ const updateMedia = async (req, res) => {
     }
 };
 
+const deleteMedia = async (req, res) => {
+    try {
+        const media = await Media.findByIdAndDelete(req.params.id);
+        if (!media) {
+            return res.status(404).send('La media no existe');
+        }
+        res.send({ message: 'Media eliminada exitosamente', media });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Ocurrió un error al eliminar la media');
+    }
+};
+
 module.exports = {
     getMedias,
     getMediaById,
     createMedia,
-    updateMedia
+    updateMedia,
+    deleteMedia
 };
