@@ -58,8 +58,7 @@ const createMedia = async (req, res) => {
         if (!productoraBD || productoraBD.estado !== 'Activo') {
             return res.status(400).send('La productora seleccionada no existe o está Inactiva');
         }
-        // -------------------------------------------------------------
-
+        
         let media = new Media({
             serial: req.body.serial,
             titulo: req.body.titulo,
@@ -111,7 +110,7 @@ const updateMedia = async (req, res) => {
         if (!productoraBD || productoraBD.estado !== 'Activo') {
             return res.status(400).send('La productora seleccionada no existe o está Inactiva');
         }
-        // -------------------------------------------------------------
+        
 
         media.serial = req.body.serial;
         media.titulo = req.body.titulo;

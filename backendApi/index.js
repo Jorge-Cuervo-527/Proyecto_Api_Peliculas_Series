@@ -11,10 +11,8 @@ app.use(cors());
 app.use(bodyParser.json());
 var port = process.env.PORT;
 
-// Conexión a la base de datos
 getConnection();
 
-// Definición de Rutas
 app.use('/genero', require('./routes/generoRoute'));
 app.use('/director', require('./routes/directorRoute'));
 app.use('/productora', require('./routes/productoraRoute'));
