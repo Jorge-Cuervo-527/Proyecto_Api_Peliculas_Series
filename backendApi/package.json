@@ -4,7 +4,7 @@
   "description": "Servicios API Rest",
   "main": "index.js",
   "scripts": {
-    "test": "NodeJs Javascript"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
